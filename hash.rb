@@ -1,6 +1,3 @@
-raise IndexError if index.negative? || index >= @buckets.length
-
-
 class HashMap
     def initialize
         @buckets = Array.new(16) {nil}
@@ -12,7 +9,7 @@ class HashMap
            
         key.each_char { |char| hash_code = prime_number * hash_code + char.ord }
            
-        hash_code
+        hash_code % @buckets.length
     end
 
     def set(key,value)
@@ -35,6 +32,8 @@ class HashMap
 
     def get(key)
         hash_code = hash(key)
+        raise IndexError if hash_code.negative? || hash_code >= @buckets.length
+
         return nil if @buckets[hash_code].nil?
         current_node = @buckets[hash_code].head
         until current_node.nil?
